@@ -1,5 +1,5 @@
 use std::ops::Add;
-// use std::ops::Sub;
+use std::ops::Sub;
 
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub enum TupleType {
@@ -46,6 +46,16 @@ impl Add for Tuple {
   }
 }
 
+impl Sub for Tuple {
+  type Output = Tuple;
+
+  fn sub(self, other: Tuple) -> Tuple {
+    let tuple_type: TupleType = self.get_type(other);
+    
+    Tuple::new(self.x - other.x, self.y - other.y, self.z - other.z, tuple_type)
+  }
+}
+
 pub fn point(x: f32, y:f32, z:f32) -> Tuple {
   Tuple::new(x, y, z, TupleType::Point)
 }
@@ -82,15 +92,26 @@ use super::*;
   }
 
   #[test]
-  fn test_adding_two_tuples() {
+  fn test_adding_a_vector_to_a_point() {
     let a1 = point(3.0,-2.0,5.0);
     let a2 = vector(-2.0, 3.0, 1.0);
 
     assert_eq!(a1 + a2, Tuple::new(1.0, 1.0, 6.0, TupleType::Point))
   }
 
-  // #[test]
-  // fn test_subtracting_two_tuples(){
+  #[test]
+  fn test_subtracting_a_vector_from_a_point(){
+    let a1 = point(3.0,2.0,1.0);
+    let a2 = vector(5.0, 6.0, 7.0);
 
-  // }
+    assert_eq!(a1 - a2, Tuple::new(-2.0, -4.0, -6.0, TupleType::Point))
+  }
+
+  #[test]
+  fn test_subtracting_2_vectors(){
+    let a1 = vector(3.0,2.0,1.0);
+    let a2 = vector(5.0, 6.0, 7.0);
+
+    assert_eq!(a1 - a2, Tuple::new(-2.0, -4.0, -6.0, TupleType::Vector))
+  }
 }
