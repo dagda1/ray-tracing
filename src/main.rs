@@ -1,6 +1,8 @@
 mod models;
-use models::vector::add;
+use models::vector::*;
 
 fn main() {
-    println!("Hello, world!");
+    let a = point(4.3, -4.2, 3.1);
+
+    println!("{}", a.y)
 }
