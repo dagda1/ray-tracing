@@ -16,6 +16,7 @@ pub struct Tuple {
   pub is: TupleType
 }
 
+const ZERO_VECTOR: Tuple = Tuple { x: 0.0, y: 0.0, z: 0.0, w: 0.0, is: TupleType::Vector };
 
 impl Tuple {
   pub fn new(x: f32, y: f32, z:f32, w: TupleType) -> Self {
@@ -33,6 +34,10 @@ impl Tuple {
     } else {
       panic!("two Points cannot be added together")
     }
+  }
+
+  pub fn negate(self) -> Tuple {
+    ZERO_VECTOR - self
   }
 }
 
@@ -63,7 +68,6 @@ pub fn point(x: f32, y:f32, z:f32) -> Tuple {
 pub fn vector(x: f32,  y: f32, z: f32) -> Tuple {
   Tuple::new(x, y, z, TupleType::Vector)
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -113,5 +117,19 @@ use super::*;
     let a2 = vector(5.0, 6.0, 7.0);
 
     assert_eq!(a1 - a2, Tuple::new(-2.0, -4.0, -6.0, TupleType::Vector))
+  }
+
+  #[test]
+  fn test_subtracting_a_vector_from_the_zero_vector() {
+    let v = vector(1.0, -2.0, 3.0);
+
+    assert_eq!(ZERO_VECTOR - v,  vector(-1.0, 2.0, -3.0));
+  }
+
+  #[test]
+  fn test_negating_tuple() {
+    let a = vector(1.0, -2.0, -3.0);
+
+    assert_eq!(a.negate(), Tuple::new(-1.0, 2.0, 3.0, TupleType::Vector));
   }
 }
