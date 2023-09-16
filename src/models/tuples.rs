@@ -31,12 +31,24 @@ impl Tuple {
 
     Tuple { x, y, z, w, is }
   }
+
+  pub fn magnitude(self) -> f32 {
+    (self.x.powf(2.0) + self.y.powf(2.0) + self.z.powf(2.0)).sqrt()
+  }
+
+  pub fn normalise(self) -> Self {
+    self / self.magnitude()
+  }
+
+  pub fn dotproduct(self, other: Tuple) -> f32 {
+    self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
+  }
 }
 
 impl Add for Tuple {
-  type Output = Tuple;
+  type Output = Self;
 
-  fn add(self, other: Tuple) -> Tuple {
+  fn add(self, other: Self) -> Self {
     Tuple::new(self.x + other.x, self.y + other.y, self.z + other.z, self.w + other.w)
   }
 }
@@ -166,5 +178,31 @@ use super::*;
     let a = Tuple::new(1.0, -2.0, 3.0, -4.0);
 
     assert_eq!(a / 2.0, Tuple::new(0.5, -1.0, 1.5, -2.0));
+  }
+
+  #[test]
+  fn test_computing_the_magnitude_of_a_vector() {
+    assert_eq!(vector(1.0, 0.0, 0.0).magnitude(), 1.0);
+    assert_eq!(vector(0.0, 1.0, 0.0).magnitude(), 1.0);
+    assert_eq!(vector(1.0, 2.0, 3.0).magnitude(), 3.7416575);
+    assert_eq!(vector(-1.0, -2.0, -3.0).magnitude(), 3.7416575);
+  }
+
+  #[test]
+  fn test_normalising_vector() {
+    assert_eq!(vector(4.0, 0.0, 0.0).normalise(), Tuple::new(1.0, 0.0, 0.0, 0.0));
+    assert_eq!(vector(1.0, 2.0, 3.0).normalise(), Tuple::new(0.26726124, 0.5345225, 0.8017837, 0.0));
+
+    let normalized = vector(1.0, 2.0, 3.0).normalise();
+
+    assert_eq!(normalized.magnitude(), 1.0);
+  }
+
+  #[test]
+  fn test_the_dot_product_of_two_tuples() {
+    let a = vector(1.0, 2.0, 3.0);
+    let b = vector(2.0, 3.0, 4.0);
+
+    assert_eq!(a.dotproduct(b), 20.0);
   }
 }
