@@ -1,5 +1,6 @@
 use std::ops::Add;
 use std::ops::Sub;
+use std::ops::Neg;
 
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub enum TupleType {
@@ -28,10 +29,6 @@ impl Tuple {
 
     Tuple { x, y, z, w, is }
   }
-
-  pub fn negate(self) -> Tuple {
-    ZERO_VECTOR - self
-  }
 }
 
 impl Add for Tuple {
@@ -47,6 +44,14 @@ impl Sub for Tuple {
 
   fn sub(self, other: Tuple) -> Tuple {
     Tuple::new(self.x - other.x, self.y - other.y, self.z - other.z, (self.w - other.w).abs())
+  }
+}
+
+impl Neg for Tuple {
+  type Output = Tuple;
+
+  fn neg(self) -> Self::Output {
+    ZERO_VECTOR - self
   }
 }
 
@@ -121,6 +126,6 @@ use super::*;
   fn test_negating_tuple() {
     let a = Tuple::new(1.0, -2.0, -3.0, -4.0);
 
-    assert_eq!(a.negate(), Tuple::new(-1.0, 2.0, 3.0, 4.0));
+    assert_eq!(-a, Tuple::new(-1.0, 2.0, 3.0, 4.0));
   }
 }
