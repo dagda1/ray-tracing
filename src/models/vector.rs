@@ -95,28 +95,20 @@ use super::*;
   }
 
   #[test]
-  fn test_subtracting_2_tuples() {
+  fn test_subtracting_2_points() {
     let p1 = point(3.0, 2.0, 1.0);
     let p2 = point(5.0, 6.0, 7.0);
 
     assert_eq!(p1 - p2, vector(-2.0, -4.0, -6.0));
   }
 
-  // #[test]
-  // fn test_subtracting_a_vector_from_a_point(){
-  //   let a1 = point(3.0,2.0,1.0);
-  //   let a2 = vector(5.0, 6.0, 7.0);
+  #[test]
+  fn test_subtracting_a_vector_from_a_point() {
+    let p = point(3.0, 2.0, 1.0);
+    let v = vector(5.0, 6.0, 7.0);
 
-  //   assert_eq!(a1 - a2, Tuple::new(-2.0, -4.0, -6.0, 1.0))
-  // }
-
-  // #[test]
-  // fn test_subtracting_2_vectors(){
-  //   let a1 = vector(3.0,2.0,1.0);
-  //   let a2 = vector(5.0, 6.0, 7.0);
-
-  //   assert_eq!(a1 - a2, Tuple::new(-2.0, -4.0, -6.0, 0.0))
-  // }
+    assert_eq!(p -v, point(-2.0, -4.0, -6.0)); 
+  }
 
   #[test]
   fn test_subtracting_a_vector_from_the_zero_vector() {
@@ -127,8 +119,8 @@ use super::*;
 
   #[test]
   fn test_negating_tuple() {
-    let a = vector(1.0, -2.0, -3.0);
+    let a = Tuple::new(1.0, -2.0, -3.0, -4.0);
 
-    assert_eq!(a.negate(), Tuple::new(-1.0, 2.0, 3.0, 0.0));
+    assert_eq!(a.negate(), Tuple::new(-1.0, 2.0, 3.0, 4.0));
   }
 }
