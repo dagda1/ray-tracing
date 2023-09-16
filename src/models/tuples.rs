@@ -1,6 +1,8 @@
 use std::ops::Add;
 use std::ops::Sub;
 use std::ops::Neg;
+use std::ops::Mul;
+use std::ops::Div;
 
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub enum TupleType {
@@ -43,7 +45,7 @@ impl Sub for Tuple {
   type Output = Tuple;
 
   fn sub(self, other: Tuple) -> Tuple {
-    Tuple::new(self.x - other.x, self.y - other.y, self.z - other.z, (self.w - other.w).abs())
+    Tuple::new(self.x - other.x, self.y - other.y, self.z - other.z, self.w - other.w)
   }
 }
 
@@ -52,6 +54,22 @@ impl Neg for Tuple {
 
   fn neg(self) -> Self::Output {
     ZERO_VECTOR - self
+  }
+}
+
+impl Mul<f32> for Tuple {
+  type Output = Self;
+
+  fn mul(self, scalar: f32) -> Self::Output {
+    Tuple::new(self.x * scalar, self.y * scalar, self.z * scalar, self.w * scalar)
+  }
+}
+
+impl Div<f32> for Tuple {
+  type Output = Self;
+
+  fn div(self, scalar: f32) -> Self::Output {
+    Tuple::new(self.x / scalar, self.y / scalar, self.z / scalar, self.w / scalar)
   }
 }
 
@@ -127,5 +145,26 @@ use super::*;
     let a = Tuple::new(1.0, -2.0, -3.0, -4.0);
 
     assert_eq!(-a, Tuple::new(-1.0, 2.0, 3.0, 4.0));
+  }
+
+  #[test]
+  fn test_multiplying_a_tuple_by_a_scalar() {
+    let a = Tuple::new(1.0, -2.0, 3.0, -4.0);
+
+    assert_eq!(a * 3.5, Tuple::new(3.5, -7.0, 10.5, -14.0));
+  }
+
+  #[test]
+  fn test_multiplying_a_tuple_by_a_fraction() {
+    let a = Tuple::new(1.0, -2.0, 3.0, -4.0);
+
+    assert_eq!(a * 0.5, Tuple::new(0.5, -1.0, 1.5, -2.0));
+  }
+
+  #[test]
+  fn test_dividing_a_tuple_by_a_scalar() {
+    let a = Tuple::new(1.0, -2.0, 3.0, -4.0);
+
+    assert_eq!(a / 2.0, Tuple::new(0.5, -1.0, 1.5, -2.0));
   }
 }
