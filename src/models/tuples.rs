@@ -40,8 +40,16 @@ impl Tuple {
     self / self.magnitude()
   }
 
-  pub fn dotproduct(self, other: Tuple) -> f32 {
+  pub fn dot_product(self, other: Tuple) -> f32 {
     self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
+  }
+
+  pub fn cross_product(self, other: Tuple) -> Tuple {
+    return vector(
+      self.y * other.z - self.z * other.y,
+      self.z * other.x - self.x * other.z,
+      self.x * other.y - self.y * other.x
+    );
   }
 }
 
@@ -203,6 +211,15 @@ use super::*;
     let a = vector(1.0, 2.0, 3.0);
     let b = vector(2.0, 3.0, 4.0);
 
-    assert_eq!(a.dotproduct(b), 20.0);
+    assert_eq!(a.dot_product(b), 20.0);
+  }
+
+  #[test]
+  fn test_the_cross_product_of_two_vectors() {
+    let a = vector(1.0, 2.0, 3.0);
+    let b = vector(2.0, 3.0, 4.0);
+
+    assert_eq!(a.cross_product(b), vector(-1.0, 2.0, -1.0));
+    assert_eq!(b.cross_product(a), vector(1.0, -2.0, 1.0));
   }
 }
