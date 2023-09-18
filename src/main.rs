@@ -1,8 +1,36 @@
 mod models;
 use models::tuples::*;
+use models::projectile::*;
+use std::thread::sleep;
+use std::time::Duration;
 
 fn main() {
-    let a = point(4.3, -4.2, 3.1);
+    let mut projectile = Projectile { position: point(0.0, 1.0, 0.0), velocity: vector(1.0, 1.0, 0.0).normalise() };
+    let environment = Environment { gravity: vector(0.0, -0.1, 0.0), wind: vector(-0.01, 0.0, 0.0) };
+    let mut counter = 0;
 
-    println!("{}", a.y)
+    println!("starting {}", projectile.position);
+
+    projectile = tick(&environment, &projectile);
+
+    loop {
+        projectile = tick(&environment, &projectile);
+
+        println!("");
+
+        println!("dropping to {}", projectile.position);
+
+        if projectile.position.y <= 0.0 {
+            println!("we hit the ground at {}", projectile.position);
+            break;
+        }
+
+        counter += 1;
+
+        if counter == 100 {
+            break;
+        }
+
+        sleep(Duration::from_secs(1));
+    }
 }

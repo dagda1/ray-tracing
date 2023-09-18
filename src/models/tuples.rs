@@ -1,8 +1,10 @@
+use std::fmt::Display;
 use std::ops::Add;
 use std::ops::Sub;
 use std::ops::Neg;
 use std::ops::Mul;
 use std::ops::Div;
+use std::fmt;
 
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub enum TupleType {
@@ -90,6 +92,12 @@ impl Div<f32> for Tuple {
 
   fn div(self, scalar: f32) -> Self::Output {
     Tuple::new(self.x / scalar, self.y / scalar, self.z / scalar, self.w / scalar)
+  }
+}
+
+impl Display for Tuple {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "({}, {}, {})", self.x, self.y, self.z)
   }
 }
 
