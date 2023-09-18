@@ -1,15 +1,21 @@
 use std::ops::Add;
+use rust_decimal::{Decimal, prelude::FromPrimitive};
+use rust_decimal_macros::dec;
 
 #[derive(Debug, PartialEq)]
 pub struct Color {
-  pub red: f32,
-  pub green: f32,
-  pub blue: f32
+  pub red: Decimal,
+  pub green: Decimal,
+  pub blue: Decimal
 }
 
 impl Color {
   pub fn new(red: f32, green: f32, blue: f32) -> Self {
-    Color { red, green, blue }
+    Color { 
+      red: Decimal::from_f32(red).unwrap(),
+      green: Decimal::from_f32(green).unwrap(),
+      blue: Decimal::from_f32(blue).unwrap() 
+    }
   }
 }
 
@@ -17,7 +23,11 @@ impl Add for Color {
   type Output = Self;
 
   fn add(self, other: Self) -> Self::Output {
-    Color::new(self.red + other.red, self.green + other.green, self.blue + other.blue)
+    Color {
+      red: self.red + other.red,
+      green: self.green + other.green,
+      blue: self.blue + other.blue
+    }
   }
 }
 
@@ -33,9 +43,9 @@ mod tests {
   fn test_colors_are_red_green_blue_tuples() {
     let c = color(-0.5, 0.4, 1.7);
 
-    assert_eq!(c.red, - 0.5);
-    assert_eq!(c.green, 0.4);
-    assert_eq!(c.blue, 1.7);
+    assert_eq!(c.red, dec!(-0.5));
+    assert_eq!(c.green, dec!(0.4));
+    assert_eq!(c.blue, dec!(1.7));
   }
 
   #[test]
