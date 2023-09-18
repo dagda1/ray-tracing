@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter, Result};
-use super::tuples::Tuple;
+use super::tuple::Tuple;
 
 #[derive(Debug)]
 pub struct Projectile {

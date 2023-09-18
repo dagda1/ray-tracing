@@ -1,5 +1,5 @@
 mod models;
-use models::tuples::*;
+use models::tuple::*;
 use models::projectile::*;
 use std::thread::sleep;
 use std::time::Duration;

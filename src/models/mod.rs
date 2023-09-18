@@ -1,2 +1,3 @@
-pub mod tuples;
+pub mod tuple;
 pub mod projectile;
+pub mod color;
