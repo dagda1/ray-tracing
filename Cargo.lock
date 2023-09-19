@@ -282,6 +282,7 @@ dependencies = [
 name = "ray-tracing"
 version = "0.1.0"
 dependencies = [
+ "num-traits",
  "rust_decimal",
  "rust_decimal_macros",
 ]
