@@ -1,7 +1,6 @@
 mod models;
 use models::tuple::*;
 use models::projectile::*;
-use rust_decimal_macros::dec;
 use std::thread::sleep;
 use std::time::Duration;
 
@@ -21,7 +20,7 @@ fn main() {
 
         println!("dropping to {}", projectile.position);
 
-        if projectile.position.y <= dec!(0.0) {
+        if projectile.position.y <= 0.0 {
             println!("we hit the ground at {}", projectile.position);
             break;
         }
