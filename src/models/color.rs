@@ -1,6 +1,7 @@
 use std::ops::Add;
 use rust_decimal::{Decimal, prelude::FromPrimitive};
-use rust_decimal_macros::dec;
+use std::ops::Sub;
+use std::ops::Mul;
 
 #[derive(Debug, PartialEq)]
 pub struct Color {
@@ -31,13 +32,51 @@ impl Add for Color {
   }
 }
 
+impl Sub for Color {
+  type Output = Self;
+
+  fn sub(self, other: Self) -> Self::Output {
+    Color {
+      red: self.red - other.red,
+      green: self.green - other.green,
+      blue: self.blue - other.blue
+    }
+  }
+}
+
+impl Mul<f32> for Color {
+  type Output = Self;
+
+  fn mul(self, scalar: f32) -> Self::Output {
+    let decimal_scalar = Decimal::from_f32(scalar).unwrap();
+    Color {
+      red: self.red * decimal_scalar, 
+      green: self.green * decimal_scalar, 
+      blue: self.blue * decimal_scalar }
+  }
+}
+
+impl Mul for Color {
+  type Output = Self;
+
+  fn mul(self, other: Self) -> Self::Output {
+    Color {
+      red: self.red * other.red,
+      green: self.green * other.green,
+      blue: self.blue * other.blue
+    }
+  }
+}
+
 pub fn color(red: f32, green: f32, blue: f32) -> Color {
   Color::new(red, green, blue)
 } 
 
 #[cfg(test)]
 mod tests {
-  use super::*;
+  use rust_decimal_macros::dec;
+
+use super::*;
 
   #[test]
   fn test_colors_are_red_green_blue_tuples() {
@@ -54,5 +93,28 @@ mod tests {
     let c2 = color(0.7, 0.1, 0.25);
 
     assert_eq!(c1 + c2, color(1.6, 0.7, 1.0));
+  }
+
+  #[test]
+  fn test_subtracting_colors() {
+    let c1 = color(0.9, 0.6, 0.75);
+    let c2 = color(0.7, 0.1, 0.25);
+
+    assert_eq!(c1 - c2, color(0.2, 0.5, 0.5));
+  }
+
+  #[test]
+  fn test_multiplying_a_color_by_a_scalar() {
+    let c = color(0.2, 0.3, 0.4);
+
+    assert_eq!(c * 2.0, color(0.4, 0.6, 0.8));
+  }
+
+  #[test]
+  fn test_multiplying_colors() {
+    let c1 = color(1.0, 0.2, 0.4);
+    let c2 = color(0.9, 1.0, 0.1);
+
+    assert_eq!(c1 * c2, color(0.9, 0.2, 0.04));
   }
 }
