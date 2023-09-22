@@ -30,7 +30,7 @@ impl Canvas {
 
       for row in self.pixels.iter() {
         for &col in row.iter() {
-          ppm.push_str(&col.to_string());
+          ppm.push_str(&format!("{}", &col));
           ppm.push_str(" ");
         }
         ppm.pop();
@@ -82,6 +82,18 @@ use super::*;
     c.write_pixel(2, 1, c2);
     c.write_pixel(4, 2, c3);
 
-    let ppm = c.to_ppm();
+    let mut ppm = c.to_ppm()
+                .lines()
+                .skip(3)
+                .take(3)
+                .collect::<Vec<&str>>()
+                .join("\n");
+
+    ppm.push_str("\n");
+
+    assert_eq!(ppm, r#"255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+"#)
   }
 }
