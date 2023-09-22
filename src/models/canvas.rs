@@ -21,10 +21,30 @@ impl Canvas {
     pub fn pixel_at(&self, x: usize, y: usize) -> &Color {
       &self.pixels[y][x]
     }
+
+    fn to_ppm(&self) -> String {
+      let mut ppm = String::from(r#"P3
+5 3
+255
+"#);
+
+      for row in self.pixels.iter() {
+        for &col in row.iter() {
+          ppm.push_str(&col.to_string());
+          ppm.push_str(" ");
+        }
+        ppm.pop();
+        ppm.push_str("\n");
+      }
+
+      ppm
+    }
 }
 
 #[cfg(test)]
 mod tests {
+use crate::models::color::color;
+
 use super::*;
 
   #[test]
@@ -35,7 +55,7 @@ use super::*;
     assert_eq!(c.height, 20);
 
     for pixel in c.pixels.iter().flatten() {
-      assert_eq!(pixel, &Color::new(0.0, 0.0, 0.0));
+      assert_eq!(pixel, &color(0.0, 0.0, 0.0));
     }
   }
 
@@ -43,10 +63,25 @@ use super::*;
   fn test_writing_pixels_to_a_canvas() {
     let mut c = Canvas::new(10, 20);
 
-    let red = Color::new(1.0, 0.0, 0.0);
+    let red = color(1.0, 0.0, 0.0);
 
     c.write_pixel(2, 3, red);
 
     assert_eq!(c.pixel_at(2, 3), &red);
+  }
+
+  #[test]
+  fn test_constructing_the_ppm_pixel_data(){
+    let mut c = Canvas::new(5, 3);
+
+    let c1 = color(1.5, 0.0, 0.0);
+    let c2 = color(0.0, 0.5, 0.0);
+    let c3 = color(-0.5, 0.0, 1.0);
+
+    c.write_pixel(0, 0, c1);
+    c.write_pixel(2, 1, c2);
+    c.write_pixel(4, 2, c3);
+
+    let ppm = c.to_ppm();
   }
 }

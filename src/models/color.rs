@@ -1,13 +1,20 @@
+use std::fmt::Display;
 use std::ops::Add;
+use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::{Decimal, prelude::FromPrimitive};
 use std::ops::Sub;
 use std::ops::Mul;
+use partial_min_max::{min, max};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Color {
   pub red: Decimal,
   pub green: Decimal,
   pub blue: Decimal
+}
+
+fn float_to_8bit(float_value: f32) -> u8 {
+  (float_value * 255.0).round() as u8
 }
 
 impl Color {
@@ -68,6 +75,16 @@ impl Mul for Color {
   }
 }
 
+impl Display for Color {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    let resolved_red = float_to_8bit(max(0.0, min(1.0, self.red.to_f32().unwrap())));
+    let resolved_green = float_to_8bit(max(0.0, min(1.0, self.green.to_f32().unwrap())));
+    let resolved_blue = float_to_8bit(max(0.0, min(1.0, self.blue.to_f32().unwrap())));
+    
+    write!(f, "{} {} {}", resolved_red, resolved_green, resolved_blue)
+  }
+}
+
 pub fn color(red: f32, green: f32, blue: f32) -> Color {
   Color::new(red, green, blue)
 } 
@@ -116,5 +133,12 @@ use super::*;
     let c2 = color(0.9, 1.0, 0.1);
 
     assert_eq!(c1 * c2, color(0.9, 0.2, 0.04));
+  }
+
+  #[test]
+  fn test_to_string() {
+    assert_eq!(format!("{}", color(1.0, 0.0, 0.0)), "255 0 0");
+    assert_eq!(format!("{}", color(0.0, 0.5, 0.0)), "0 128 0");
+    assert_eq!(format!("{}", color(-0.5, 0.0, 1.0)), "0 0 255");
   }
 }
