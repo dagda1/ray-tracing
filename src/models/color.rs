@@ -3,7 +3,7 @@ use rust_decimal::{Decimal, prelude::FromPrimitive};
 use std::ops::Sub;
 use std::ops::Mul;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Color {
   pub red: Decimal,
   pub green: Decimal,
