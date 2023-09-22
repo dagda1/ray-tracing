@@ -71,6 +71,21 @@ use super::*;
   }
 
   #[test]
+  fn test_constructing_the_ppm_header() {
+    let c = Canvas::new(5, 3);
+
+    let header = c.to_ppm()
+               .lines()
+               .take(3)
+               .collect::<Vec<&str>>()
+               .join("\n");
+
+    assert_eq!(header, r#"P3
+5 3
+255"#)
+  }
+
+  #[test]
   fn test_constructing_the_ppm_pixel_data(){
     let mut c = Canvas::new(5, 3);
 
