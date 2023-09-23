@@ -1,3 +1,5 @@
+use crate::models::color::decimal_to_8bit;
+
 use super::color::Color;
 
 pub struct Canvas {
@@ -29,7 +31,22 @@ impl Canvas {
 "#);
 
       for row in self.pixels.iter() {
+        let mut counter = 0;
         for &col in row.iter() {
+          counter += 11;
+
+          println!("counter {} color ${}", counter, col);
+          if counter > 61 {
+            ppm.push_str(&format!("{}", decimal_to_8bit(col.red)));
+            ppm.push_str(" ");
+            ppm.push_str(&format!("{}", decimal_to_8bit(col.green)));
+            ppm.push_str("\n");
+            ppm.push_str(&format!("{}", decimal_to_8bit(col.blue)));
+            ppm.push_str(" ");
+            counter = 4;
+            continue;
+          }
+
           ppm.push_str(&format!("{}", &col));
           ppm.push_str(" ");
         }
@@ -109,6 +126,32 @@ use super::*;
     assert_eq!(ppm, r#"255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+"#)
+  }
+
+  #[test]
+  fn test_splitting_long_lines_in_ppm_files() {
+    let mut c = Canvas::new(10, 2);
+
+    for i in 0..c.pixels.len() {
+      for j in 0..c.pixels[i].len() {
+          c.write_pixel(j, i, color(1.0, 0.8, 0.6));
+      }
+    }
+
+    let mut ppm = c.to_ppm()
+                .lines()
+                .skip(3)
+                .take(4)
+                .collect::<Vec<&str>>()
+                .join("\n");
+
+    ppm.push_str("\n");
+
+    assert_eq!(ppm, r#"255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+153 255 204 153 255 204 153 255 204 153 255 204 153
+255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+153 255 204 153 255 204 153 255 204 153 255 204 153
 "#)
   }
 }

@@ -13,8 +13,8 @@ pub struct Color {
   pub blue: Decimal
 }
 
-fn float_to_8bit(float_value: f32) -> u8 {
-  (float_value * 255.0).round() as u8
+pub fn decimal_to_8bit(decimal_value: Decimal) -> u8 {
+  (max(0.0, min(1.0, decimal_value.to_f32().unwrap())) * 255.0).round() as u8
 }
 
 impl Color {
@@ -77,9 +77,9 @@ impl Mul for Color {
 
 impl Display for Color {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    let resolved_red = float_to_8bit(max(0.0, min(1.0, self.red.to_f32().unwrap())));
-    let resolved_green = float_to_8bit(max(0.0, min(1.0, self.green.to_f32().unwrap())));
-    let resolved_blue = float_to_8bit(max(0.0, min(1.0, self.blue.to_f32().unwrap())));
+    let resolved_red = decimal_to_8bit(self.red);
+    let resolved_green = decimal_to_8bit(self.green);
+    let resolved_blue = decimal_to_8bit(self.blue);
     
     write!(f, "{} {} {}", resolved_red, resolved_green, resolved_blue)
   }
