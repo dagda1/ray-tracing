@@ -154,4 +154,13 @@ use super::*;
 153 255 204 153 255 204 153 255 204 153 255 204 153
 "#)
   }
+
+  #[test]
+  fn test_ppm_file_is_terminated_by_a_string() {
+    let c = Canvas::new(5, 3);
+
+    let ppm = c.to_ppm();
+
+    assert_eq!(ppm.ends_with('\n'), true);
+  }
 }
